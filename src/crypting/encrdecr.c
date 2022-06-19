@@ -45,18 +45,17 @@ char *viginere_decrypt(char *text, char *key, int keysz){
     res[strlen(text)] = '\0';
     return res;
 }
-
-
 int main(){
 
     char *key = "tisi gei ";
     int sz = sizeof(key)/sizeof(char);
     keyidk = key[sz];
-    char *res=calloc(3000, sizeof(char));
-    //char *res = viginere_crypt("Hodi na praida shiban mindil skapan ti izsuhne sichko bez praneto", key,strlen(key));
-    //char *res2 = viginere_decrypt(res, key,strlen(key));
-    FILE *f = fopen("aa.txt", "r");
-    fgets(res,512, f);
+    char *res3=calloc(3000, sizeof(char));
+    char *res = viginere_crypt("Super customers** - only smartasses,Sleeky tycoons ...v Ooo.Super customers - only smartasseSleeky tycoons ... Ooo.Ale-le-ley, again... Ale-le-ley, again..Ale-le-ley, again... Ale-le-ley, again...ll of them are in Saint-Tropez, others are at the Maldives,In Dubai are the rest (of them)! Ah, le-le-le...All of them are in Saint-Tropez -others are in the MaldivesIn Dubai are the rest (of them)! Ah, le-le-le...Ale-le-ley, again... Ale-le-ley, again...Ale-le-ley, again... Ale-le-ley, again", key,strlen(key));
+    char *res2 = viginere_decrypt(res, key,strlen(key));
+    FILE *f = fopen("aa.txt", "w");
+    fprintf(f, res);
+    fgets(res3,512, f);
     printf("%s\n", viginere_decrypt(res, key, sz+1));
     
 
