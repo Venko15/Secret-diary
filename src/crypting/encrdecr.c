@@ -53,8 +53,6 @@ int main(){
     int sz = sizeof(key)/sizeof(char);
     keyidk = key[sz];
     char *res=calloc(3000, sizeof(char));
-    //char *res = viginere_crypt("Hodi na praida shiban mindil skapan ti izsuhne sichko bez praneto", key,strlen(key));
-    //char *res2 = viginere_decrypt(res, key,strlen(key));
     FILE *f = fopen("aa.txt", "r");
     fgets(res,512, f);
     printf("%s\n", viginere_decrypt(res, key, sz+1));
