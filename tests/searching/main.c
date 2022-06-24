@@ -3,6 +3,7 @@
 #include <time.h> // za testvane
 
 #include "../../src/searching/trie_string.c"
+#include "../../src/crypting/encrdecr.c"
 
 int increment_char(char *c){
 	if(*c == 'Z'){
