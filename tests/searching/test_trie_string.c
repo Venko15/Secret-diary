@@ -27,6 +27,7 @@ int main(){
 	char name[] = "AAAAA";
 	char buffer[10];
 	trie_string_t *database = trie_string_init();
+	printf("loading data of 11 881 365 elements\n");
 	for(int i = 0; i < 11881375; i++){
 		itoa(count, buffer, 10);
 		trie_string_insert(database, name, buffer);
