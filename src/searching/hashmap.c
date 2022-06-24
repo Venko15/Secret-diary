@@ -14,7 +14,7 @@ typedef struct{
 	hashmap_int_t *data;
 } hashmap_date_t;
 
-/////////////////////////// HASMAP_INT ///////////////////////////////////
+/////////////////////////// HASHMAP_INT ///////////////////////////////////
 hashmap_int_t* hashmap_int_init(unsigned int bucket_count){
 	hashmap_int_t *result = malloc(sizeof(hashmap_int_t));
 	// here we dereference the constantness of the members
@@ -35,7 +35,7 @@ void* hashmap_int_find(hashmap_int_t *h, int key){
 	return sll_int_find(h->array[key % h->length], key);
 }
 
-/////////////////////////// HASMAP_DATE //////////////////////////////////
+/////////////////////////// HASHMAP_DATE //////////////////////////////////
 hashmap_date_t* hashmap_date_init(unsigned int day_buckets, unsigned int month_buckets, unsigned int year_buckets){
 	hashmap_date_t *result = malloc(sizeof(hashmap_date_t)); 
 	*(unsigned int*) &result->year_buckets = year_buckets;
