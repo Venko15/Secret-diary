@@ -1,5 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 char encrypt(char text, char keyst)
 {
@@ -12,7 +10,7 @@ char decrypt(char text, char keyst)
     return text ^ keyst;
 }
 
-char *viginere_encrypt(char *text, char *key, int len)
+char *xor_cipher(char *text, char *key, int len)
 {
     char *res = calloc(len, sizeof(char));
 
@@ -35,7 +33,7 @@ char *viginere_encrypt(char *text, char *key, int len)
     return res;
 }
 
-char *viginere_decrypt(char *text, char *key, int len)
+char *xor_decipher(char *text, char *key, int len)
 {
 
     char *res = calloc(len, sizeof(char));
@@ -57,30 +55,4 @@ char *viginere_decrypt(char *text, char *key, int len)
     }
     res[i] = '\0';
     return res;
-}
-
-int main()
-{
-
-    char text[] = "Do am he horrible distance marriage so although. Afraid assure square so happen mr an before. His many same been well can high that. Forfeited did law eagerness allowance improving assurance bed. Had saw put seven joy short first. Pronounce so enjoyment my resembled in forfeited sportsman. Which vexed did began son abode short may. Interested astonished he at cultivated or me. Nor brought one invited she produce her.";
-    char key[] = "oho";
-    int len = strlen(text)+1;
-    char *res = viginere_encrypt(text, key, len);
-    char *res2 = viginere_decrypt(res, key, len);
-    FILE *f = fopen("a.bin", "wb+");
-    fwrite(res,sizeof(char), len, f);
-    fclose(f);
-    f = fopen("a.bin", "rb");
-
-    int file_sz ;
-    fseek(f, 0L, SEEK_END);
-    file_sz = ftell(f);
-    rewind(f);
-    printf("%d\n", file_sz);
-    char *buffer = (char *)malloc(sizeof(char) * file_sz); 
-    int length = 0;
-
-    int size = fread(buffer, sizeof(char), CUR_MAX, f);
-    char *end = viginere_decrypt(buffer, key, size);
-    printf("%s\n", end);
 }
