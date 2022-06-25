@@ -3,7 +3,6 @@
 #include <time.h> // za testvane
 
 #include "../../src/searching/trie_string.c"
-#include "../../src/crypting/encrdecr.c"
 
 int increment_char(char *c){
 	if(*c == 'Z'){
@@ -55,7 +54,7 @@ int main(){
 		clock_t begin = clock();
 		char* result = trie_string_find(database, test_data[i]);
 		clock_t end = clock();
-		printf("Finding the element %s took %lfs.\n", result, (double)(end - begin));
+		printf("Finding the element %s took %lfs.\n", result, (double)(end - begin) / CLOCKS_PER_SEC);
 	}
 	return 0;
 }

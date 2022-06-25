@@ -72,13 +72,13 @@ int main(){
 	scanf("%u", &bucket_count);
 	hashmap_date_t *database = hashmap_date_init(bucket_count);
 	int *date = calloc(3, sizeof(int));
-	printf("loading data of  7 200 000 elements\n");
-	for(int i = 0; i < 7200000; i++){
+	printf("loading data of 720 000 elements\n");
+	for(int i = 0; i < 720000; i++){
 		char *date_buffer = date_to_string(date);
 		char *value = date_to_value(date);
 		hashmap_date_insert(database, date_buffer, value);
 		increment_date(date);
-		if(i % 720000 == 0 && i != 0) printf("loading data %.0lf%% complete\n", ((double)(i) / 720000) * 10);
+		if(i % 72000 == 0 && i != 0) printf("loading data %.0lf%% complete\n", ((double)(i) / 72000) * 10);
 	}
 	printf("loading data 100%% complete\n\n");
 	char *test_data[] = {
@@ -89,16 +89,16 @@ int main(){
 		"27.12.1679",
 		"01.10.1697",
 		"10.03.1702",
-		"12.04.2005",
-		"23.02.19888",
-		"20.03.16432",
-		"29.11.19999"
+		"12.04.1605",
+		"23.02.1988",
+		"20.03.1643",
+		"29.11.1999"
 	};
 	for(int i = 0; i < 11; i++){
 		clock_t begin = clock();
 		char *result = hashmap_date_find(database, test_data[i]);
 		clock_t end = clock();
-		printf("Finding the element %s took %lfs.\n", result, (double) (end - begin)); 
+		printf("Finding the element %s took %lfs.\n", result, (double) (end - begin) / CLOCKS_PER_SEC); 
 		free(result);
 	}
 	return 0;

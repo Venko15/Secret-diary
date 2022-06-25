@@ -6,7 +6,8 @@
 
 typedef struct{
 	const unsigned int length;
-	sll_int_t **array;	
+	sll_int_t **heads;	
+	sll_int_t **tails;
 } hashmap_int_t;
 
 typedef struct{
@@ -18,20 +19,24 @@ hashmap_int_t* hashmap_int_init(unsigned int bucket_count){
 	hashmap_int_t *result = malloc(sizeof(hashmap_int_t));
 	// here we dereference the constantness of the members
 	*(unsigned int *) &result->length = bucket_count;
-	result->array = calloc(result->length, sizeof(sll_int_t*));
+	result->heads = calloc(result->length, sizeof(sll_int_t*));
+	result->tails = calloc(result->length, sizeof(sll_int_t*));
 	return result;
 }
 
 int hashmap_int_insert(hashmap_int_t *h, int key, void *value){
 	// returns 0 if successful, -1 if not
 	// the hash function is just modulo divison by the bucket count
-	sll_int_t *result = sll_int_append(h->array[key % h->length], key, value);	
-	if(result != NULL) h->array[key % h->length] = result;
+	sll_int_t *result = sll_int_append(h->tails[key % h->length], key, value);	
+	if(result != NULL){
+		h->tails[key % h->length] = result;
+		if(h->heads[key % h->length] == NULL) h->heads[key % h->length] = result;
+	}
 	return result == NULL;
 }
 
 void* hashmap_int_find(hashmap_int_t *h, int key){
-	return sll_int_find(h->array[key % h->length], key);
+	return sll_int_find(h->heads[key % h->length], key);
 }
 
 /////////////////////////// HASHMAP_DATE //////////////////////////////////
