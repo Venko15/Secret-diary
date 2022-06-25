@@ -1,10 +1,10 @@
 #include <string.h>
-char encrypt(char text, char keyst)
+char decipher(char text, char keyst)
 {
     return text ^ keyst;
 }
 
-char decrypt(char text, char keyst)
+char cipher(char text, char keyst)
 {
 
     return text ^ keyst;
@@ -21,11 +21,11 @@ char *xor_cipher(char *text, char *key, int len)
     for (i = 0; i < len; i++)
     {
 
-        res[i] = encrypt(text[i], key_temp[i % (strlen(key) )]);
+        res[i] = cipher(text[i], key_temp[i % (strlen(key) )]);
 
-        if (i % 7 == 0 && i != 0)
+        if (i % (strlen(key) ) == 0 && i != 0)
         {
-            strncpy(key_temp, &text[i - 7], strlen(key));
+            strncpy(key_temp, &text[i - (strlen(key) )], strlen(key));
             // printf("%s\n", key);
         }
     }
@@ -45,11 +45,11 @@ char *xor_decipher(char *text, char *key, int len)
     for (i = 0; i < len; i++)
     {
 
-        res[i] = decrypt(text[i], key_temp[i % (strlen(key))]);
+        res[i] = decipher(text[i], key_temp[i % (strlen(key))]);
 
-        if (i % 7 == 0 && i != 0)
+        if (i % (strlen(key) ) == 0 && i != 0)
         {
-            strncpy(key_temp, &res[i - 7], strlen(key_temp));
+            strncpy(key_temp, &res[i - (strlen(key) )], strlen(key_temp));
 
         }
     }
