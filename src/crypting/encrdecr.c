@@ -3,13 +3,11 @@
 #include <string.h>
 char encrypt(char text, char keyst)
 {
-    //printf("%c", text ^ keyst);
     return text ^ keyst;
 }
 
 char decrypt(char text, char keyst)
 {
-    //printf("%c", text ^ keyst);
 
     return text ^ keyst;
 }
