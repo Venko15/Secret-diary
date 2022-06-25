@@ -14,9 +14,8 @@ void reverse(char s[]){
      }
 } 
 
-void itoa_(int n, char s[], int w){
+void itoa_(int n, char s[]){
      int i, sign;
-
      if ((sign = n) < 0)  /* record sign */
          n = -n;          /* make n positive */
      i = 0;
@@ -32,10 +31,10 @@ void itoa_(int n, char s[], int w){
 void increment_date(int *date){
 	date[0]++;
 	if(date[0] == 31){
-		date[0] = 0;
+		date[0] = 1;
 		date[1]++;
 		if(date[1] == 13){
-			date[1] = 0;
+			date[1] = 1;
 			date[2]++;
 		}
 	}
@@ -43,9 +42,9 @@ void increment_date(int *date){
 
 char* date_to_value(int *date){
 	char d[10], m[10], y[10];
-	itoa_(date[0], d, 10);	
-	itoa_(date[1], m, 10);	
-	itoa_(date[2], y, 10);	
+	itoa_(date[0], d);	
+	itoa_(date[1], m);	
+	itoa_(date[2], y);	
 	char *result = calloc(31, sizeof(char));
 	strcat(result, d);
 	strcat(result, m);
@@ -55,9 +54,9 @@ char* date_to_value(int *date){
 
 char* date_to_string(int *date){
 	char d[10], m[10], y[10];
-	itoa_(date[0], d, 10);	
-	itoa_(date[1], m, 10);	
-	itoa_(date[2], y, 10);	
+	itoa_(date[0], d);	
+	itoa_(date[1], m);	
+	itoa_(date[2], y);	
 	char *result = calloc(33, sizeof(char));
 	strcat(result, d);
 	strcat(result, ".");
@@ -68,15 +67,18 @@ char* date_to_string(int *date){
 }
 
 int main(){
-	hashmap_date_t *database = hashmap_date_init(5, 2, 50);
+	printf("Enter the number of buckets in the hashmap (this will determine the speed of the searching): ");
+	unsigned int bucket_count;
+	scanf("%u", &bucket_count);
+	hashmap_date_t *database = hashmap_date_init(bucket_count);
 	int *date = calloc(3, sizeof(int));
-	printf("loading data of  720 000 elements\n");
-	for(int i = 0; i < 720000; i++){
+	printf("loading data of  7 200 000 elements\n");
+	for(int i = 0; i < 7200000; i++){
 		char *date_buffer = date_to_string(date);
 		char *value = date_to_value(date);
 		hashmap_date_insert(database, date_buffer, value);
 		increment_date(date);
-		if(i % 72000 == 0 && i != 0) printf("loading data %.0lf%% complete\n", ((double)(i) / 72000) * 10);
+		if(i % 720000 == 0 && i != 0) printf("loading data %.0lf%% complete\n", ((double)(i) / 720000) * 10);
 	}
 	printf("loading data 100%% complete\n\n");
 	char *test_data[] = {
@@ -87,8 +89,12 @@ int main(){
 		"27.12.1679",
 		"01.10.1697",
 		"10.03.1702",
+		"12.04.2005",
+		"23.02.19888",
+		"20.03.16432",
+		"29.11.19999"
 	};
-	for(int i = 0; i < 7; i++){
+	for(int i = 0; i < 11; i++){
 		clock_t begin = clock();
 		char *result = hashmap_date_find(database, test_data[i]);
 		clock_t end = clock();

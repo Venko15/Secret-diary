@@ -3,12 +3,12 @@
 #include <stdlib.h>
 
 typedef struct sll_int{
-	int key;
+	long long key;
 	void *value;
 	struct sll_int *next; 	
 } sll_int_t;
 
-sll_int_t* sll_int_init(int key, void *value){
+sll_int_t* sll_int_init(long long key, void *value){
 	sll_int_t *result = malloc(sizeof(sll_int_t));
 	result->key = key;
 	result->value = value;
@@ -16,7 +16,7 @@ sll_int_t* sll_int_init(int key, void *value){
 	return result;
 }
 
-sll_int_t* sll_int_append(sll_int_t *head, int key, void *value){
+sll_int_t* sll_int_append(sll_int_t *head, long long key, void *value){
 	// returns the pointer head if successful, returns NULL if not
 	if(head == NULL) return sll_int_init(key, value);
 	sll_int_t *new_node = sll_int_init(key, value);	
@@ -29,7 +29,7 @@ sll_int_t* sll_int_append(sll_int_t *head, int key, void *value){
 	return head;
 }
 
-void* sll_int_find(sll_int_t *s, int key){
+void* sll_int_find(sll_int_t *s, long long key){
 	if(s == NULL) return NULL;
 	while(s != NULL){
 		if(s->key == key) return s->value;
