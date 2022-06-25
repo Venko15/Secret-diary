@@ -62,7 +62,7 @@ char *viginere_decrypt(char *text, char *key, int len)
 int main()
 {
 
-    char text[] = "Satisfied conveying an dependent contented he gentleman agreeable do be. Warrant private blushes removed an in equally totally if. Delivered dejection necessary objection do mr prevailed. Mr feeling do chiefly cordial in do. Water timed folly right aware if oh truth. Imprudence attachment him his for sympathize. Large above be to means. Dashwood do provided stronger is. But discretion frequently sir the she instrument unaffected admiration everything.";
+    char text[] = "Do am he horrible distance marriage so although. Afraid assure square so happen mr an before. His many same been well can high that. Forfeited did law eagerness allowance improving assurance bed. Had saw put seven joy short first. Pronounce so enjoyment my resembled in forfeited sportsman. Which vexed did began son abode short may. Interested astonished he at cultivated or me. Nor brought one invited she produce her.";
     char key[] = "oho";
     int len = strlen(text)+1;
     char *res = viginere_encrypt(text, key, len);
@@ -71,15 +71,16 @@ int main()
     fwrite(res,sizeof(char), len, f);
     fclose(f);
     f = fopen("a.bin", "rb");
-    char ch;
 
-    int CUR_MAX = 750;
-    char *buffer = (char *)malloc(sizeof(char) * CUR_MAX); 
+    int file_sz ;
+    fseek(f, 0L, SEEK_END);
+    file_sz = ftell(f);
+    rewind(f);
+    printf("%d\n", file_sz);
+    char *buffer = (char *)malloc(sizeof(char) * file_sz); 
     int length = 0;
 
     int size = fread(buffer, sizeof(char), CUR_MAX, f);
     char *end = viginere_decrypt(buffer, key, size);
-    for(int i = 0 ; i < size; i++){
-        printf("%c", end[i]);
-    }
+    printf("%s\n", end);
 }
