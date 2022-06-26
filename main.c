@@ -145,6 +145,13 @@ char* fix_date(char *date){
 
 int main()
 {
+    char key[255];
+    printf("ENTER PASSWORD FOR DIARY: ");
+    scanf("%s", key);
+    if(rsa(key)){
+        printf("wrong password ||| ABORTING\n");
+        return -1;
+    }
     file story;
     char answer[32];
     int ans;
@@ -238,9 +245,7 @@ int main()
         strcat(text,"$");
         strcat(text,story.content);
 
-        char *key=calloc(text_len,sizeof(char));
-
-        char *encrypted = encrypt(text,KEY,text_len);
+        char *encrypted = encrypt(text,key,text_len);
         printf("\nGo back to main menu? ");
         fwrite(encrypted, sizeof(char), text_len,f);
         scanf("%s", answer);
@@ -276,7 +281,7 @@ int main()
 		char *filename = calloc(100, sizeof(char));
 		printf("Enter the file's name: ");
 		scanf("%s", filename);
-        visualization(extract(filename, KEY));
+        visualization(extract(filename, key));
 		free(filename);
 
     }else if(ans == 5){
@@ -307,7 +312,7 @@ int main()
 				}	
 				if(skip == 1) continue;
 				data = realloc(data, data_len * sizeof(file*));
-				data[data_len - 1] = extract(dir->d_name, KEY);
+				data[data_len - 1] = extract(dir->d_name, key);
 				data_len++;
 			}
 			closedir(d);
