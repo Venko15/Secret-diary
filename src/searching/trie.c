@@ -4,7 +4,7 @@
 #include <string.h>
 
 typedef struct trie_string_node_t{
-	char *value;
+	void *value;
 	// symbols: [a-z], [A-Z], [,.]
 	struct trie_string_node_t *next[54];
 } trie_string_node_t;
@@ -14,7 +14,7 @@ typedef struct{
 } trie_string_t;
 
 ///////////////////////////// NODE STUFF ///////////////////////////////
-trie_string_node_t* trie_string_node_init(char *value){
+trie_string_node_t* trie_string_node_init(void *value){
 	trie_string_node_t *result = malloc(sizeof(trie_string_node_t));
 	result->value = value;
 	for(int i = 0; i < 54; i++) result->next[i] = NULL;
@@ -30,12 +30,11 @@ int trie_string_node_hash(char c){
 	return -1;	
 }
 
-int trie_string_node_insert(trie_string_node_t *root, char *name, char *value){
+int trie_string_node_insert(trie_string_node_t *root, char *name, void *value){
 	// returns 0 if successful, -1 if not
 	if(root == NULL || name == NULL || value == NULL) return -1;	
 	if(name[0] == '\0'){
-		root->value = calloc(strlen(value) + 1, sizeof(char));	
-		strcpy(root->value, value);
+		root->value = value;
 		return 0;
 	}
 	int next_node_index = trie_string_node_hash(name[0]);
@@ -61,7 +60,7 @@ trie_string_t* trie_string_init(){
 	return result;
 }
 
-int trie_string_insert(trie_string_t *t, char *name, char *value){
+int trie_string_insert(trie_string_t *t, char *name, void *value){
 	return trie_string_node_insert(t->root, name, value);
 }
 
