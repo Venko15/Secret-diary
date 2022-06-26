@@ -73,7 +73,7 @@ int main(){
 		"KKXIE",
 		"HRFFM",
 		"WCEFD",
-		"QWQXG"};
+		"BCBCB"};
 	for(int i = 0; i < 11; i++){
 		clock_t begin = clock();
 		char* result = trie_string_find(database, test_data[i]);

@@ -5,8 +5,8 @@
 
 typedef struct trie_string_node_t{
 	void *value;
-	// symbols: [a-z], [A-Z], [,.]
-	struct trie_string_node_t *next[54];
+	// symbols: [a-z], [A-Z], [,. ]
+	struct trie_string_node_t *next[55];
 } trie_string_node_t;
 
 typedef struct{
@@ -17,7 +17,7 @@ typedef struct{
 trie_string_node_t* trie_string_node_init(void *value){
 	trie_string_node_t *result = malloc(sizeof(trie_string_node_t));
 	result->value = value;
-	for(int i = 0; i < 54; i++) result->next[i] = NULL;
+	for(int i = 0; i < 55; i++) result->next[i] = NULL;
 	return result;
 }
 
@@ -27,6 +27,7 @@ int trie_string_node_hash(char c){
 	if(c >= 'A' && c <= 'Z') return c - 'A';
 	if(c == ',') return 52;
    	if(c == '.') return 53;
+	if(c == ' ') return 54;
 	return -1;	
 }
 
