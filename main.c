@@ -1,10 +1,15 @@
-#include "src/crypting/encrypt.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
 #include <string.h>
+
+#include "src/crypting/encrypt.c"
+#include "src/searching/trie.c"
 #include "src/searching/hashmap.c"
+
 #define KEY "dsajlkdsaljkdsaj"
+#define FILE_SUFFIX ".bin"
+
 typedef struct{
     char name[30];
     char* content;
@@ -20,7 +25,7 @@ void instructions(){
     printf("Instructions:\n");
     printf("\tIn order to use a function, simply type it's number.\n");
     printf("\tThe list of options is:\n");
-    printf("\t1.Read all file names\n\t2.Create new file\n\t3.Remove a file\n\t4.Exit\n");
+    printf("\t1.Read all file names\n\t2.Create new file\n\t3.Remove a file\n\t4.Find a story by name\n\t5.Find a story by date\n\t6.Exit\n");
 }
 
 void print(){
@@ -78,12 +83,24 @@ void visualization(file *story){
     system("cls");
     printf("Story's name: %s\nIt's date: %s\nAnd the Story itself:\n\t%s\n",story->name, story->date, story->content);
 }
-file *extract(char *filename, char *key){
+
+file *extract(char *filename_, char *key){
+	char *filename = calloc(100, sizeof(char));
+	strcpy(filename, filename_);
+	strcat(filename, FILE_SUFFIX);
     FILE *f = fopen(filename, "rb");
+	if(!f){
+		printf("Couldn't open such file\n");
+		exit(0);
+	}
 
     int file_sz;
     fseek(f, 0, SEEK_END);
     file_sz = ftell(f);
+	if(file_sz == 0){
+		printf("There is no information in this file\n");
+		exit(0);
+	}
     rewind(f);
     char *buffer = (char *)calloc(file_sz,sizeof(char)); 
     
@@ -108,6 +125,7 @@ file *extract(char *filename, char *key){
     strcpy(extraction->name,filename);
     return extraction;
 }
+
 char* fix_date(char *date){
     int *tokens = tokenize_date(date);    
     if(tokens[0] > 31 || tokens[1] > 12) return NULL;
@@ -124,6 +142,7 @@ char* fix_date(char *date){
     }
     return result;
 }
+
 int main()
 {
     file story;
@@ -133,7 +152,7 @@ int main()
     list *files; ///logikata tuk e da imame papka v koqto da gledame za vsichki fajlove
     menu:
     instructions();
-    printf("\nPlease select an answer: (answer must be chosen between 1 and 4): ");
+    printf("\nPlease select an answer: (answer must be chosen between 1 and 7): ");
     scanf("%d", &ans);
 
     if(ans == 0){
@@ -251,8 +270,71 @@ int main()
             goto menu;
         }else{
             printf("Goodbye!");}
+
+    }else if(ans == 4){
+		system("cls");
+		char *filename = calloc(100, sizeof(char));
+		printf("Enter the file's name: ");
+		scanf("%s", filename);
+        visualization(extract(filename, KEY));
+		free(filename);
+
     }else if(ans == 5){
-        visualization(extract("ddz.bin", KEY));
-    }
+		char *date = calloc(20, sizeof(char));
+		printf("Enter the date: ");
+		scanf("%s", date);
+		char *excluded[] = {
+			".",
+			"..",
+			".git",
+			"src",
+			"tests",
+			".gitignore",
+			"LICENSE",
+			"main.c"
+		};
+		int data_len = 1;
+		file **data;
+		DIR *d;
+		struct dirent *dir;
+		d = opendir(".");
+		if (d){
+			while ((dir = readdir(d)) != NULL){
+				//printf("%s\n",dir->d_name);
+				int skip = 0;
+				for(int i = 0; i < 8; i++){
+					if(!strcmp(dir->d_name, excluded[i])) skip = 1; 
+				}	
+				if(skip == 1) continue;
+				data = realloc(data, data_len * sizeof(file*));
+				data[data_len - 1] = extract(dir->d_name, KEY);
+				data_len++;
+			}
+			closedir(d);
+		}
+		hashmap_date_t *hashmap = hashmap_date_init(100);
+		for(int i = 0; i < data_len; i++){
+			hashmap_date_insert(hashmap, data[i]->date, data[i]);
+		}
+		file* result = hashmap_date_find(hashmap, date);
+		if(result == NULL){
+			system("cls");
+			printf("No file with such date was found.\n");
+		}else{
+			visualization(result); 
+		}
+        printf("\nGo back to main menu? ");
+        scanf("%s", answer);
+        
+        if(!strcmp(answer,"yes") || !strcmp(answer,"Yes") || !strcmp(answer,"y")){
+            system("cls");
+            goto menu;
+        }else{
+            printf("Goodbye!");
+		}
+
+	}else if(ans == 6){
+		return 0;
+	}
     return 0;
 }
