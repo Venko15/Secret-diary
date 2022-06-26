@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
 #include <dirent.h>
-#include <signal.h>
 #include <string.h>
 
 typedef struct{
-    char name[50];
+    char name[30];
     char* content;
-    char data_and_time[11];
+    char date[11];
 }file;
 
 typedef struct{
@@ -20,11 +18,10 @@ void instructions(){
     printf("Instructions:\n");
     printf("\tIn order to use a function, simply type it's number.\n");
     printf("\tThe list of options is:\n");
-    printf("\t1.Read all file names\n\t2.Edit a file\n\t3.Create new file\n\t4.Remove a file\n\t0.Exit\n");
+    printf("\t1.Read all file names\n\t2.Create new file\n\t3.Remove a file\n\t4.Exit\n");
 }
 
 void print(){
-     // directory stream variable for accessing the directory
   DIR *d;
     struct dirent *dir;
     d = opendir(".");
@@ -36,13 +33,7 @@ void print(){
             i++;
         }
         closedir(d);
-
     }
-
-}
-
-char* find_file_by_index(list *files, int index){
-    return &(files->arr[index].name[0]);
 }
 
 list* read_from_file(char *fileName){
@@ -66,16 +57,37 @@ list* read_from_file(char *fileName){
     return output;
 }
 
+int validate(char c){
+  if(c >= 'a' && c <= 'z') return 0;
+  if(c >= 'A' && c <= 'Z') return 0;
+  if(c == '.') return 0;
+  if(c == ',') return 0;
+  return 1;
+}
+
+int validate_date(char c, int index){
+  if((index == 2 || index == 5) && c != '.') return 1;
+  if(c >= '0' && c <= '9') return 0;
+  if(c == '.' && (index == 2 || index == 5)) return 0;
+  return 1;
+}
+
+void visualization(file story){
+    system("cls");
+    printf("Story's name: %s\nIt's date: %s\nAnd the Story itself:\n\t%s\n",story.name, story.date, story.content);
+}
+
+
 int main()
 {
-    file file;
+    file story;
     char answer[32];
     int ans;
-    int index;
+    char file_type[] = ".bin";
     list *files; ///logikata tuk e da imame papka v koqto da gledame za vsichki fajlove
     menu:
     instructions();
-    printf("Please select an answer: (answer must be chosen between 1 and 5)");
+    printf("\nPlease select an answer: (answer must be chosen between 1 and 4): ");
     scanf("%d", &ans);
 
     if(ans == 0){
@@ -90,67 +102,92 @@ int main()
         printf("-----------------------------------");
         printf("\nGo back to main menu? ");
         scanf("%s", answer);
-        if(!strcmp(answer,"yes") || !strcmp(answer,"Yes")){
+        if(!strcmp(answer,"yes") || !strcmp(answer,"Yes") || !strcmp(answer,"y")){
             system("cls");
             goto menu;
         }else{printf("Goodbye!");}
     }
 
-    else if(ans == 2){ //edit a file
+    else if(ans == 2){ //create new file
         system("cls");
-        printf("You have selected the edit option.\nPlease select the file you want to edit by its index: ");
-        scanf("%d",&index);
-        printf("Excellent! Now you can edit (%d)\n",index);
-        char *fileName;
-       // fileName = find_file_by_index(files, index);///maj ne raboti taka
-        strcpy(fileName, files->arr[index].name);
-        FILE *f = fopen(fileName,"w");
-        read_from_file(fileName);
-        printf("Success!");
+        char name [30];
 
-        printf("\nGo back to main menu? ");
-        scanf("%s", answer);
-        if(!strcmp(answer,"yes") || !strcmp(answer,"Yes")){
-            system("cls");
-            goto menu;
-        }else{
-            printf("Goodbye!");}
-    }
 
-    else if(ans == 3){ //create new file
-        system("cls");
-        char name [50];
-        char *fileName;
-        printf("You have selected the add option.\nPlease enter new file name.\n");
-        scanf("%s", &name);
-        //file temp;
-        //strcpy(temp.name, name);
-        fileName = name;
+        printf("You have selected the create option.\n\tPlease enter new story name: ");
+        scanf("%s", story.name);
+
+        for(int i=0; i<strlen(story.name); i++){
+            if(validate(story.name[i]) == 1){
+
+                printf("Invalid name!");
+                printf("\nGo back to main menu? ");
+                scanf("%s", answer);
+                if(!strcmp(answer,"yes") || !strcmp(answer,"Yes") || !strcmp(answer,"y")){
+                    system("cls");
+                goto menu;
+                }else{
+                printf("Goodbye!");
+                return 0;}
+                }
+        };
+
+        char *fileName = calloc(34, sizeof(char));
+        strcpy(fileName, story.name);
+        strcat(fileName, file_type);
+
+        printf("\tPlease enter story's date (dd.mm.yyyy):");
+        scanf("%s", story.date);
+        for(int i=0; i<strlen(story.date); i++){
+            if(validate_date(story.date[i], i)){
+                printf("Invalid date!");
+                printf("\nGo back to main menu? ");
+                scanf("%s", answer);
+                if(!strcmp(answer,"yes") || !strcmp(answer,"Yes") || !strcmp(answer,"y")){
+                    system("cls");
+                goto menu;
+                }else{
+                printf("Goodbye!");
+                return 0;
+                }
+            }
+        };
+
+        story.content = calloc(500, sizeof(char));
+        char input;
+        printf("\tPlease enter story's content: \n\t(to exit - type: ctrl + 'y' -> then: enter)\n\t");
+        int j = 0;
+        for(j = 0; input != 25; j++){
+            input = getchar();
+            story.content[j] = input;
+        }
+        story.content[j-1]='\0';
+
+        visualization(story);
+
         FILE *f = fopen(fileName,"w+");
-
         printf("\nGo back to main menu? ");
         scanf("%s", answer);
-        if(!strcmp(answer,"yes") || !strcmp(answer,"Yes")){
+        if(!strcmp(answer,"yes") || !strcmp(answer,"Yes") || !strcmp(answer,"y")){
             system("cls");
             goto menu;
         }else{
             printf("Goodbye!");}
     }
 
-    else if(ans == 4){ //remove
+    else if(ans == 3){ //remove
         system("cls");
-        printf("\tYou have selected remove a file option.\n\tPlease select the file you want to remove by his index: ");
-        scanf("%d", &index);
-        char *fileName = find_file_by_index(files, index);
-        printf("point 1");
-        printf("%s", fileName);
+        printf("\tYou have selected remove a file option.\n\tPlease enter it's name: ");
+        char name[32];
+        scanf("%s", name);
+        char fileName[34];
+        strcpy(fileName, name);
+        strcat(fileName, file_type);
         remove(fileName);
-        printf("point 2");
-        printf("Success!");
+        printf("\tSuccess!");
 
         printf("\nGo back to main menu? ");
         scanf("%s", answer);
-        if(!strcmp(answer,"yes") || !strcmp(answer,"Yes")){
+        if(!strcmp(answer,"yes") || !strcmp(answer,"Yes") || !strcmp(answer,"y")){
             system("cls");
             goto menu;
         }else{
