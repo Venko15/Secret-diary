@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 char shift(char text, char keyst)
 {
     return (text+keyst)%127;

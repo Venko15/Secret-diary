@@ -46,7 +46,6 @@ int main(){
     rewind(f);
     //printf("%d\n", file_sz);
     char *buffer = (char *)calloc(file_sz,sizeof(char)); 
-    int length = 0;
     
     fread(buffer, sizeof(char), file_sz, f);
     char *end = decrypt(buffer, key, file_sz);
