@@ -100,7 +100,7 @@ int hashmap_date_insert(hashmap_date_t *h, char *date, void *value){
 	return hashmap_int_insert(h->data, index, value);
 }
 
-char* hashmap_date_find(hashmap_date_t *h, char *date){
+void* hashmap_date_find(hashmap_date_t *h, char *date){
 	unsigned long long index = hash_date(date);
 	return hashmap_int_find(h->data, index);
 }
