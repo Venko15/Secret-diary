@@ -1,5 +1,6 @@
 #include "vigenere.c"
 #include "xor_cipher.c"
+#include "rsa.c"
 #pragma once
 char *ini_vector="klfc'w[dy jsadsawq2w";
 char *encrypt(char *text, char *key, int len){
