@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h> // za testvane
 
-#include "../../src/searching/trie_string.c"
+#include "../../src/searching/trie.c"
 
 int increment_char(char *c){
 	if(*c == 'Z'){
@@ -21,14 +21,38 @@ void increment(char *string){
 	}
 }
 
+void reverse(char s[]){
+     int i, j;
+     char c;
+     for (i = 0, j = strlen(s)-1; i<j; i++, j--) {
+         c = s[i];
+         s[i] = s[j];
+         s[j] = c;
+	}
+}
+
+void itoa_(int n, char s[]){
+	int i, sign;
+    if ((sign = n) < 0)  /* record sign */
+	    n = -n;          /* make n positive */
+    i = 0;
+    do {       /* generate digits in reverse order */
+	    s[i++] = n % 10 + '0';   /* get next digit */
+    } while ((n /= 10) > 0);     /* delete it */
+   	if (sign < 0)
+    	s[i++] = '-';
+ 	s[i] = '\0';
+	reverse(s);
+}
+
 int main(){
 	int count = 1;
 	char name[] = "AAAAA";
-	char buffer[10];
 	trie_string_t *database = trie_string_init();
 	printf("loading data of 11 881 365 elements\n");
 	for(int i = 0; i < 11881375; i++){
-		itoa(count, buffer, 10);
+		char *buffer = calloc(9, sizeof(char));
+		itoa_(count, buffer);
 		trie_string_insert(database, name, buffer);
 		count++;
 		increment(name);
